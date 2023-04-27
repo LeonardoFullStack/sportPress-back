@@ -23,7 +23,38 @@ const queries = {
     WHERE email =$1`,
     deleteUser: 
     `DELETE FROM users
-    WHERE email=$1`
+    WHERE email=$1`,
+    getNewById:
+    `SELECT * 
+    FROM news AS n
+    WHERE n.id_new = $1;`,
+    getCommentsByNew:
+    `SELECT c.*
+    FROM comments AS c
+    WHERE c.id_new = $1;`,
+    getLastNews:
+    `SELECT *
+    FROM news AS n
+    ORDER BY n.date DESC
+    LIMIT 4`,
+    getLastNewsWithoutTeam:
+    `SELECT *
+    FROM news AS n
+    WHERE n.tags NOT LIKE '%' || $1 || '%'
+    ORDER BY n.date DESC
+    LIMIT 2`,
+    getLastNewsWithTeam:
+    `SELECT *
+    FROM news AS n
+    WHERE n.tags LIKE '%' || $1 || '%'
+    ORDER BY n.date DESC
+    LIMIT 2`,
+    getLastNewsByTeam:
+    `SELECT *
+    FROM news AS n
+    WHERE n.tags LIKE '%' || $1 || '%'
+    ORDER BY n.date DESC
+    LIMIT 4`
 }
 
 module.exports = queries
