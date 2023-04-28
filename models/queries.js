@@ -74,7 +74,7 @@ const queries = {
     WHERE id_new=$2`,
     updateNew:
     `UPDATE news
-    SET title = $1, extract = $2, text = $3, image = $4, tags = $5
+    SET title = $1, extract = $2, text = $3, image = $4, tags = $5, date = DEFAULT
     WHERE id_new = $6;`
 }
 

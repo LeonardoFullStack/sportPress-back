@@ -284,7 +284,21 @@ const updateNewState = async (req,res) => {
     }
 }
 
-
+/**
+ * Actualiza una noticia existente en la base de datos.
+ * @async
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} req.body - El objeto que contiene los datos de la noticia a actualizar.
+ * @param {string} req.body.title - El nuevo título de la noticia.
+ * @param {string} req.body.extract - El nuevo extracto de la noticia.
+ * @param {string} req.body.text - El nuevo texto completo de la noticia.
+ * @param {string} req.body.image - La nueva URL de la imagen de la noticia.
+ * @param {string[]} req.body.tags - Un array con las nuevas etiquetas de la noticia.
+ * @param {number} req.body.id_new - El ID de la noticia que se va a actualizar.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ * @returns {Promise<void>} Una promesa que se resuelve cuando se completa la operación de actualización.
+ * @throws {Error} Si la operación de actualización falla por alguna razón.
+ */
 const updateNew = async (req,res) => {
     const {title, extract, text, image, tags, id_new} = req.body
 

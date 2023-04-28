@@ -276,6 +276,19 @@ const updateNewStateModel = async (newState, id_new) => {
     return result
 }
 
+
+/**
+ * Actualiza una noticia existente en la base de datos.
+ * @async
+ * @param {string} title - El título actualizado de la noticia.
+ * @param {string} extract - El extracto actualizado de la noticia.
+ * @param {string} text - El texto actualizado de la noticia.
+ * @param {string} image - La URL de la imagen actualizada de la noticia.
+ * @param {string} tags - Las etiquetas actualizadas de la noticia.
+ * @param {number} id_new - El ID de la noticia que se actualizará.
+ * @returns {Promise<Array<Object>>} El resultado de la consulta como un array de objetos.
+ * @throws {Error} Si hay algún error en la consulta a la base de datos.
+ */
 const updateNewModel = async ( title, extract, text, image, tags, id_new) => {
     let client,result;
 
