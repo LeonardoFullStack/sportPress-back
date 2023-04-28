@@ -1,5 +1,6 @@
 const {
-    getNewByIdAndCommentsModel, getLastNewsModel, getMyLastNewsModel, getNewsByTeamModel
+    getNewByIdAndCommentsModel, getLastNewsModel, getMyLastNewsModel, getNewsByTeamModel, getNewsByStateModel,
+    getNewsByStateAndUserModel, createNewByIdModel, updateNewStateModel, updateNewModel
 } = require('../models/news')
 
 
@@ -13,20 +14,20 @@ const {
  * @returns {Object} - objeto JSON con información de la noticia y sus comentarios
  * @throws {Object} - objeto JSON con información sobre el error ocurrido durante la ejecución
  */
-const getNewByIdAndComments =async (req,res) => {
-    const {id} = req.params
+const getNewByIdAndComments = async (req, res) => {
+    const { id } = req.params
     try {
-       const petition = await getNewByIdAndCommentsModel(id) 
-       
+        const petition = await getNewByIdAndCommentsModel(id)
+
         if (petition.newsLetter.length == 0) res.status(404).json({
-                                                ok:false,
-                                                msg: 'No se ha encontrado la noticia'
-                                                })
+            ok: false,
+            msg: 'No se ha encontrado la noticia'
+        })
         else res.status(200).json({
-                ok:true,
-                msg: `Noticia con id ${id} y sus comentarios`,
-                data: petition
-             })
+            ok: true,
+            msg: `Noticia con id ${id} y sus comentarios`,
+            data: petition
+        })
 
     } catch (error) {
         res.status(500).json({
@@ -47,15 +48,15 @@ const getNewByIdAndComments =async (req,res) => {
  * @param {object} petition - datos de las últimas 4 noticias.
  *
  */
-const getLastNews= async(req,res) => {
+const getLastNews = async (req, res) => {
 
 
     try {
         const petition = await getLastNewsModel()
 
         res.status(200).json({
-            ok:true,
-            msg:'últimas 4 noticias',
+            ok: true,
+            msg: 'últimas 4 noticias',
             data: petition
         })
     } catch (error) {
@@ -78,13 +79,13 @@ const getLastNews= async(req,res) => {
  * @returns {Promise} Una promesa que se resuelve con un objeto que contiene las últimas noticias relacionadas y no relacionadas con el equipo especificado.
  * @throws {Error} Si se produce algún error al obtener las noticias.
  */
-const getMyLastNews=async (req,res) => {
-    const {team} = req.params
+const getMyLastNews = async (req, res) => {
+    const { team } = req.params
 
     try {
         const petition = await getMyLastNewsModel(team)
         res.status(200).json({
-            ok:true,
+            ok: true,
             msg: '4 noticias combinadas',
             data: petition
         })
@@ -108,13 +109,13 @@ const getMyLastNews=async (req,res) => {
  * @returns {object} Objeto que contiene las últimas 4 noticias del equipo.
  * @throws {Error} Si ocurre algún error al consultar la base de datos.
  */
-const getLastNewsByTeam =async (req,res) => {
-    const {team} = req.params
+const getLastNewsByTeam = async (req, res) => {
+    const { team } = req.params
 
     try {
         const petition = await getNewsByTeamModel(team)
         res.status(200).json({
-            ok:true,
+            ok: true,
             msg: `4 noticias del equipo ${team}`,
             data: petition
         })
@@ -126,9 +127,194 @@ const getLastNewsByTeam =async (req,res) => {
         })
     }
 }
+
+
+/**
+ * Obtiene las noticias de un estado específico.
+ * @async
+ * @function getNewsByState
+ * @param {Object} req - Objeto de solicitud HTTP.
+ * @param {Object} res - Objeto de respuesta HTTP.
+ * @param {string} req.params.state - El estado del cual se quieren obtener las noticias.
+ * @throws {Object} - Objeto de error en caso de fallo en la obtención de noticias.
+ */
+const getNewsByState = async (req, res) => {
+    const { state } = req.params
+
+
+    try {
+        const petition = await getNewsByStateModel(state)
+
+        res.status(200).json({
+            ok: true,
+            msg: `Noticias en estado ${state}`,
+            data: petition
+        })
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'contacta con el administrador',
+            error
+        })
+    }
+}
+
+
+/**
+ * Obtiene las noticias de un estado y un usuario específico y las devuelve como respuesta HTTP.
+ *
+ * @async
+ * @function
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ * @param {string} req.body.state - El estado del que se desea obtener noticias.
+ * @param {number} req.body.id_user - El ID del usuario del que se desea obtener noticias.
+ 
+ * @returns {Promise<void>} - Una promesa que se resuelve cuando se envía la respuesta HTTP.
+ */
+const getNewsByStateAndUser = async (req, res) => {
+    const { state, id_user } = req.body
+
+    if (!state || !id_user) {
+        res.status(404).json({
+            ok: false,
+            msg: 'No se ha recibido el estado o el usuario correctamente',
+            
+        })
+
+    } else {
+
+    
+
+
+        try {
+            const petition = await getNewsByStateAndUserModel(state, id_user)
+
+            if (petition.length == 0) {
+                res.status(404).json({
+                    ok: false,
+                    msg: `No se han encontrado noticias del usuario ${id_user} en ese estado`,
+                })
+
+            } else {
+                res.status(200).json({
+                    ok: true,
+                    msg: `Noticias en estado ${state} del usuario con id ${id_user}`,
+                    data: petition
+                })
+
+            }
+
+
+
+        } catch (error) {
+                res.status(500).json({
+                ok: false,
+                msg: 'contacta con el administrador',
+                error
+            })                
+        }
+    }
+
+}
+
+
+/**
+ * Controlador que se encarga de crear una nueva noticia asociada a un usuario específico en la base de datos.
+ * @async
+ * @function
+ * @param {Object} req - Objeto que contiene los datos de la solicitud HTTP.
+ * @param {Object} res - Objeto que se encarga de enviar la respuesta HTTP.
+ * @param {number} req.body.id_user - ID del usuario que crea la noticia.
+ * @param {string} req.body.title - Título de la noticia.
+ * @param {string} req.body.extract - Extracto de la noticia.
+ * @param {string} req.body.text - Texto completo de la noticia.
+ * @param {string} req.body.image - URL de la imagen asociada a la noticia.
+ * @param {string} req.body.tags - Etiquetas relacionadas con la noticia.
+ */
+const createNewById = async (req,res) => {
+    const {id_user, title, extract, text, image, tags} = req.body
+
+    try {
+        const petition = await createNewByIdModel(id_user, title, extract, text, image, tags)
+        res.status(200).json({
+            ok:true,
+            msg:'Se ha creado la noticia.'
+        })
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'contacta con el administrador',
+            error
+        })  
+    }
+}
+
+
+/**
+ * Actualiza el estado de una noticia.
+ * @async
+ * @param {Object} req - La solicitud HTTP.
+ * @param {Object} res - La respuesta HTTP.
+ * @param {string} req.body.state - El nuevo estado de la noticia.
+ * @param {string} req.body.id_new - El ID de la noticia a actualizar.
+ * @returns {Promise<void>} - Una promesa que resuelve con nada.
+ * @throws {Object} - Un objeto de error si ocurre una excepción.
+ */
+const updateNewState = async (req,res) => {
+    const {state, id_new} = req.body
+
+    try {
+
+        const petition = await updateNewStateModel(state, id_new)
+
+        res.status(200).json({
+            ok:true,
+            msg:`Se ha modificado el estado de la noticia en ${state}.`
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'contacta con el administrador',
+            error
+        })  
+    }
+}
+
+
+const updateNew = async (req,res) => {
+    const {title, extract, text, image, tags, id_new} = req.body
+
+    try {
+
+        const petition = await updateNewModel(title, extract, text, image, tags, id_new)
+
+        res.status(200).json({
+            ok:true,
+            msg:`Se ha modificado la noticia con id ${id_new}.`
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'contacta con el administrador',
+            error
+        })  
+    }
+}
+
+
 module.exports = {
     getNewByIdAndComments,
     getLastNews,
     getMyLastNews,
-    getLastNewsByTeam
+    getLastNewsByTeam,
+    getNewsByState,
+    getNewsByStateAndUser,
+    createNewById,
+    updateNewState,
+    updateNew
 }

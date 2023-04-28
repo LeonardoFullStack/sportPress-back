@@ -35,26 +35,47 @@ const queries = {
     getLastNews:
     `SELECT *
     FROM news AS n
+    WHERE state='aproved'
     ORDER BY n.date DESC
     LIMIT 4`,
     getLastNewsWithoutTeam:
     `SELECT *
     FROM news AS n
-    WHERE n.tags NOT LIKE '%' || $1 || '%'
+    WHERE n.tags NOT LIKE '%' || $1 || '%' AND state='aproved'
     ORDER BY n.date DESC
     LIMIT 2`,
     getLastNewsWithTeam:
     `SELECT *
     FROM news AS n
-    WHERE n.tags LIKE '%' || $1 || '%'
+    WHERE n.tags LIKE '%' || $1 || '%' AND state='aproved'
     ORDER BY n.date DESC
     LIMIT 2`,
     getLastNewsByTeam:
     `SELECT *
     FROM news AS n
-    WHERE n.tags LIKE '%' || $1 || '%'
+    WHERE n.tags LIKE '%' || $1 || '%' AND state='aproved'
     ORDER BY n.date DESC
-    LIMIT 4`
+    LIMIT 4`,
+    getNewsByState:
+    `SELECT *
+    FROM news
+    WHERE state=$1`,
+    getNewsByStateAndUser:
+    `SELECT *
+    FROM news
+    WHERE state=$1 AND id_user=$2`,
+    createNewByIdUser:
+    `INSERT INTO news (id_user, title, extract, text, image, tags)
+    VALUES
+    ($1, $2, $3, $4, $5, $6)`,
+    updateNewState:
+    `UPDATE news
+    SET state=$1
+    WHERE id_new=$2`,
+    updateNew:
+    `UPDATE news
+    SET title = $1, extract = $2, text = $3, image = $4, tags = $5
+    WHERE id_new = $6;`
 }
 
 module.exports = queries

@@ -160,9 +160,145 @@ const getNewsByTeamModel=async (team) => {
 }
 
 
+/**
+ * Obtiene las noticias de un estado específico desde la base de datos.
+ * @async
+ * @function getNewsByStateModel
+ * @param {string} state - El estado del cual se quieren obtener las noticias.
+ * @returns {Promise<Array>} - Promesa que se resuelve con un array de objetos JSON que contienen las noticias del estado especificado.
+ * @throws {Object} - Objeto de error en caso de fallo en la obtención de noticias.
+ */
+const getNewsByStateModel=async (state) => {
+    let client,result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getNewsByState,[state])
+        result = data.rows
+        
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+
+/**
+ * Obtiene las noticias de un estado y un usuario específico.
+ *
+ * @async
+ * @function
+ * @param {string} state - El estado del que se quieren obtener las noticias.
+ * @param {string} user - El identificador del usuario que creó las noticias.
+ * @returns {Promise<Array>} - Una promesa que resuelve en un array con las noticias.
+ * @throws {Error} - Si hay algún error al conectarse a la base de datos.
+ */
+const getNewsByStateAndUserModel =async (state, user) => {
+    let client,result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getNewsByStateAndUser,[state, user])
+        result = data.rows
+        
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+
+/**
+ * Crea una nueva noticia en la base de datos asociada al usuario con un id específico.
+ * @async
+ * @function createNewByIdModel
+ * @param {number} id_user - El id del usuario que está creando la noticia.
+ * @param {string} title - El título de la noticia.
+ * @param {string} extract - Un extracto de la noticia.
+ * @param {string} text - El cuerpo de la noticia.
+ * @param {string} image - La URL de la imagen asociada a la noticia.
+ * @param {Array<string>} tags - Un array de strings que contiene las etiquetas asociadas a la noticia.
+ * @throws {Error} Si ocurre algún error al ejecutar la consulta SQL.
+ * @returns {Promise<Array<object>>} Una promesa que retorna un array con los datos de la nueva noticia creada.
+ */
+const createNewByIdModel = async (id_user, title, extract, text, image, tags) => {
+     let client,result;
+
+    try {
+        client= await pool.connect()
+        const data = await client.query(queries.createNewByIdUser, [id_user, title, extract, text, image, tags])
+        result = data.rows
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+    return result
+}
+
+
+/**
+ * Actualiza el estado de una noticia en la base de datos.
+ * @async
+ * @param {string} newState - El nuevo estado de la noticia.
+ * @param {string} id_new - El ID de la noticia a actualizar.
+ * @returns {Promise<Array>} - Una promesa que resuelve con un arreglo de objetos con la información de la noticia actualizada.
+ * @throws {Object} - Un objeto de error si ocurre una excepción.
+ */
+const updateNewStateModel = async (newState, id_new) => {
+    let client,result;
+
+    try {
+        client= await pool.connect()
+        const data = await client.query(queries.updateNewState, [newState, id_new])
+        result = data.rows
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+    return result
+}
+
+const updateNewModel = async ( title, extract, text, image, tags, id_new) => {
+    let client,result;
+
+    try {
+        client= await pool.connect()
+        const data = await client.query(queries.updateNew, [title, extract, text, image, tags, id_new])
+        result = data.rows
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+    return result
+}
+
+
 module.exports = {
     getNewByIdAndCommentsModel,
     getLastNewsModel,
     getMyLastNewsModel,
-    getNewsByTeamModel
+    getNewsByTeamModel,
+    getNewsByStateModel,
+    getNewsByStateAndUserModel,
+    createNewByIdModel,
+    updateNewStateModel,
+    updateNewModel
 }
