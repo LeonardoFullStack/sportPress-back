@@ -75,7 +75,31 @@ const queries = {
     updateNew:
     `UPDATE news
     SET title = $1, extract = $2, text = $3, image = $4, tags = $5, date = DEFAULT
-    WHERE id_new = $6;`
+    WHERE id_new = $6`,
+    deleteNew:
+    `DELETE FROM news
+    WHERE id_new=$1`,
+    getCommentsByUser:
+    `SELECT *
+    FROM comments
+    WHERE id_user=$1`,
+    createCommentForNew:
+    `INSERT INTO comments (text, id_user, id_new)
+    VALUES
+    ($1, $2, $3)
+     `,
+     updateNewById:
+     `UPDATE comments
+     SET text=$1, date = DEFAULT , edited=true
+     WHERE id_comment=$2`,
+     deleteCommentById:
+     `DELETE 
+     FROM comments
+     WHERE id_comment=$1`,
+     deleteCommentsOfNew:
+     `DELETE 
+     FROM comments
+     WHERE id_new=$1`
 }
 
 module.exports = queries

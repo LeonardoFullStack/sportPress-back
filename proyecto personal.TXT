@@ -65,4 +65,19 @@ updatenewstate
 updatenew
 
 deletenewandcomments
+FALTA AÑADIR EL MODELO DE DELETECOMMENTS AL COCNTROLADOR DEL DELETENEW!!!
+
+
+comments:
+
+getCommentsByUser
+
+createCommentForNew
+
+updateComment
+
+DELETECOMMENT
+deleteNewComments
+
+
 
