@@ -1,8 +1,11 @@
+
+
 const {
     getNewByIdAndCommentsModel, getLastNewsModel, getMyLastNewsModel, getNewsByTeamModel, getNewsByStateModel,
-    getNewsByStateAndUserModel, createNewByIdModel, updateNewStateModel, updateNewModel
+    getNewsByStateAndUserModel, createNewByIdModel, updateNewStateModel, updateNewModel, deleteNewModel
 } = require('../models/news')
 
+const {deleteCommentsOfNewModel} = require('../models/comments')
 
 /**
  * Función asíncrona para obtener una noticia y sus comentarios a partir de un ID
@@ -181,12 +184,12 @@ const getNewsByStateAndUser = async (req, res) => {
         res.status(404).json({
             ok: false,
             msg: 'No se ha recibido el estado o el usuario correctamente',
-            
+
         })
 
     } else {
 
-    
+
 
 
         try {
@@ -210,11 +213,11 @@ const getNewsByStateAndUser = async (req, res) => {
 
 
         } catch (error) {
-                res.status(500).json({
+            res.status(500).json({
                 ok: false,
                 msg: 'contacta con el administrador',
                 error
-            })                
+            })
         }
     }
 
@@ -234,21 +237,21 @@ const getNewsByStateAndUser = async (req, res) => {
  * @param {string} req.body.image - URL de la imagen asociada a la noticia.
  * @param {string} req.body.tags - Etiquetas relacionadas con la noticia.
  */
-const createNewById = async (req,res) => {
-    const {id_user, title, extract, text, image, tags} = req.body
+const createNewById = async (req, res) => {
+    const { id_user, title, extract, text, image, tags } = req.body
 
     try {
         const petition = await createNewByIdModel(id_user, title, extract, text, image, tags)
         res.status(200).json({
-            ok:true,
-            msg:'Se ha creado la noticia.'
+            ok: true,
+            msg: 'Se ha creado la noticia.'
         })
     } catch (error) {
         res.status(500).json({
             ok: false,
             msg: 'contacta con el administrador',
             error
-        })  
+        })
     }
 }
 
@@ -263,16 +266,16 @@ const createNewById = async (req,res) => {
  * @returns {Promise<void>} - Una promesa que resuelve con nada.
  * @throws {Object} - Un objeto de error si ocurre una excepción.
  */
-const updateNewState = async (req,res) => {
-    const {state, id_new} = req.body
+const updateNewState = async (req, res) => {
+    const { state, id_new } = req.body
 
     try {
 
         const petition = await updateNewStateModel(state, id_new)
 
         res.status(200).json({
-            ok:true,
-            msg:`Se ha modificado el estado de la noticia en ${state}.`
+            ok: true,
+            msg: `Se ha modificado el estado de la noticia en ${state}.`
         })
 
     } catch (error) {
@@ -280,7 +283,7 @@ const updateNewState = async (req,res) => {
             ok: false,
             msg: 'contacta con el administrador',
             error
-        })  
+        })
     }
 }
 
@@ -299,16 +302,16 @@ const updateNewState = async (req,res) => {
  * @returns {Promise<void>} Una promesa que se resuelve cuando se completa la operación de actualización.
  * @throws {Error} Si la operación de actualización falla por alguna razón.
  */
-const updateNew = async (req,res) => {
-    const {title, extract, text, image, tags, id_new} = req.body
+const updateNew = async (req, res) => {
+    const { title, extract, text, image, tags, id_new } = req.body
 
     try {
 
         const petition = await updateNewModel(title, extract, text, image, tags, id_new)
 
         res.status(200).json({
-            ok:true,
-            msg:`Se ha modificado la noticia con id ${id_new}.`
+            ok: true,
+            msg: `Se ha modificado la noticia con id ${id_new}.`
         })
 
     } catch (error) {
@@ -316,7 +319,42 @@ const updateNew = async (req,res) => {
             ok: false,
             msg: 'contacta con el administrador',
             error
-        })  
+        })
+    }
+}
+
+
+/**
+ * Elimina una noticia y sus comentarios asociados en la base de datos.
+ * @param {Object} req - Objeto de solicitud HTTP.
+ * @param {Object} res - Objeto de respuesta HTTP.
+ * @param {string} req.params.id_new - ID de la noticia a eliminar
+ */
+const deleteNewAndComments = async (req, res) => {
+    const { id_new } = req.params
+
+    if (!id_new) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Falta el id en la consulta',
+            
+        })
+    } else {
+
+        try {
+            const deleteComments = await deleteCommentsOfNewModel(id_new)
+            const petition = await deleteNewModel(id_new)
+            res.status(200).json({
+                ok: true,
+                msg: `Se ha eliminado la noticia con id ${id_new}`
+            })
+        } catch (error) {
+            res.status(500).json({
+                ok: false,
+                msg: 'contacta con el administrador',
+                error
+            })
+        }
     }
 }
 
@@ -330,5 +368,6 @@ module.exports = {
     getNewsByStateAndUser,
     createNewById,
     updateNewState,
-    updateNew
+    updateNew,
+    deleteNewAndComments
 }

@@ -213,7 +213,6 @@ const updatePass = async (req,res) => {
  * @returns {Promise} Una promesa que se resuelve con los resultados de la eliminación.
  * @throws {Error} Si se produce algún error al intentar eliminar al usuario.
  */
-
 const deleteUser = async (req,res) => {
 
     const {email} = req.body

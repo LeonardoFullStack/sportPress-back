@@ -17,7 +17,7 @@ app.use(express.static(__dirname+'/public'))
 
 
 app.use('/api/users',require('./routers/apiUsers'))
-/* app.use('/api/comments',require('./routers/apiComments')) */
+app.use('/api/comments',require('./routers/apiComments'))
 app.use('/api/news',require('./routers/apiNews'))
 
 

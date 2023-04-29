@@ -2,9 +2,11 @@ const express=require('express')
 const router=express.Router()
 const {check} = require('express-validator')
 const {validarInputs} = require('../middleware/inputValidate')
+
+
 const {
     getNewByIdAndComments, getLastNews, getMyLastNews, getLastNewsByTeam, getNewsByState, getNewsByStateAndUser,
-    createNewById, updateNewState, updateNew
+    createNewById, updateNewState, updateNew, deleteNewAndComments
 } = require('../controllers/apiNewsControllers')
 
 
@@ -37,6 +39,10 @@ router.post('/createNew/', [
 router.put('/updatenewstate/', updateNewState)
 
 router.put('/updatenew/', updateNew)
+
+//////DELETE////////
+
+router.delete('/deletenew/:id_new', deleteNewAndComments)
 
 module.exports=router
 

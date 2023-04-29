@@ -1,6 +1,7 @@
 const { Pool } = require('pg')
 const queries = require('./queries')
 
+
 const pool = new Pool({
     host: 'horton.db.elephantsql.com',
     user: 'rrnjbnic',
@@ -303,6 +304,30 @@ const updateNewModel = async ( title, extract, text, image, tags, id_new) => {
     return result
 }
 
+const deleteNewModel = async (id) => {
+    let client,result;
+
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.deleteNew,[id])
+        result = data.rows
+        
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
 
 module.exports = {
     getNewByIdAndCommentsModel,
@@ -313,5 +338,6 @@ module.exports = {
     getNewsByStateAndUserModel,
     createNewByIdModel,
     updateNewStateModel,
-    updateNewModel
+    updateNewModel,
+    deleteNewModel
 }
