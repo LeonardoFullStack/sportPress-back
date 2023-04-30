@@ -1,10 +1,10 @@
-#SportPress
+# SportPress
 
 Bienvenido a la documentación de back-end de la aplicación de SportPress de Leonardo, desde los comandos para iniciar el proyecto hasta las rutas para la administración de la
 base de datos.
 ***
 
-##PARA COMENZAR
+## PARA COMENZAR
 Deberemos descargar el repositorio en nuestro ordenador con un git clone .
 
 Luego deberemos añadir los datos proporcionados por classroom en el archivo ```.env.template``` , y eliminar el ```.template```.
