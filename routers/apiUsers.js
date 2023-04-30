@@ -21,6 +21,6 @@ router.put('/updaterole', updateRole)
 
 router.put('/updatepass', updatePass)
 
-router.delete('/deleteuser', deleteUser)
+router.delete('/deleteuser/:id', deleteUser)
 
 module.exports = router

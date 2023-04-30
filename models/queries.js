@@ -23,7 +23,7 @@ const queries = {
     WHERE email =$1`,
     deleteUser: 
     `DELETE FROM users
-    WHERE email=$1`,
+    WHERE id_user=$1`,
     getNewById:
     `SELECT * 
     FROM news AS n
@@ -83,6 +83,9 @@ const queries = {
     `SELECT *
     FROM comments
     WHERE id_user=$1`,
+    getAllComments:
+    `SELECT *
+    FROM comments`,
     createCommentForNew:
     `INSERT INTO comments (text, id_user, id_new)
     VALUES

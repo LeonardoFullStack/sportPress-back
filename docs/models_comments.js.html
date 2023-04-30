@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/comments.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/comments.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { Pool } = require('pg')
+const queries = require('./queries')
+
+const pool = new Pool({
+    host: 'horton.db.elephantsql.com',
+    user: 'rrnjbnic',
+    database: 'rrnjbnic',
+    password: process.env.POSTGREPASS,
+    port: 5432, // Puerto por defecto para PostgreSQL
+    ssl: {
+        rejectUnauthorized: false // Habilitar SSL sin verificar el certificado
+    }
+});
+
+
+/**
+* Obtiene los comentarios realizados por un usuario en concreto
+*
+* @async
+* @function
+* @param {number} id_user - El id del usuario del que se quieren obtener los comentarios
+* @returns {Promise&lt;Array>} Un array con los comentarios del usuario especificado
+* @throws {Error} Si hay algún error al realizar la consulta en la base de datos
+*/
+const getCommentsByUserModel = async (id_user) => {
+    let client, result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getCommentsByUser, [id_user])
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+const getAllCommentsModel = async (id_user) => {
+    let client, result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getAllComments)
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+
+/**
+ * Crea un comentario para una noticia específica
+ * @param {string} text - El texto del comentario
+ * @param {number} id_user - El ID del usuario que crea el comentario
+ * @param {number} id_new - El ID de la noticia a la que se asocia el comentario
+ * @returns {Promise&lt;Object>} - Objeto con los detalles del comentario creado
+ * @throws {Error} - Si se produce algún error al interactuar con la base de datos
+ */
+const createCommentsForNewModel = async (text, id_user, id_new) => {
+    let client, result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.createCommentForNew, [text, id_user, id_new])
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+
+/**
+ * Actualiza el texto de un comentario en la base de datos.
+ *
+ * @async
+ * @function updateCommentByIdModel
+ * @param {string} text - El nuevo texto del comentario.
+ * @param {number} id_comment - El ID del comentario a actualizar.
+ * @returns {Promise&lt;object>} El comentario actualizado en la base de datos.
+ * @throws {Error} Si hay un error en la consulta SQL.
+ */
+const updateCommentByIdModel = async (text, id_comment) => {
+    let client, result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.updateNewById, [text, id_comment])
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+/**
+ * Elimina un comentario de la base de datos según su ID.
+ *
+ * @async
+ * @function deleteCommentByIdModel
+ * @param {number} id_comment - El ID del comentario a eliminar.
+ * @throws {Error} Si se produce algún error al realizar la consulta a la base de datos.
+ * @returns {Promise&lt;Array>} Una promesa que devuelve un array con los resultados de la consulta.
+ */
+const deleteCommentByIdModel = async (id_comment) => {
+    let client, result;
+
+    try {
+
+        client = await pool.connect()
+        
+
+        const data = await client.query(queries.deleteCommentById, [id_comment])
+        result = data.rows
+        
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+
+/**
+ * Elimina los comentarios de una noticia por su id.
+ * @async
+ * @function
+ * @param {number} id - El id de la noticia.
+ * @returns {Promise&lt;Object>} El resultado de la consulta a la base de datos.
+ * @throws {Error} Si hay un error al conectarse a la base de datos.
+ */
+const deleteCommentsOfNewModel = async (id) => {
+    let client, result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.deleteCommentsOfNew, [id])
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+
+module.exports = {
+    getCommentsByUserModel,
+    createCommentsForNewModel,
+    updateCommentByIdModel,
+    deleteCommentByIdModel,
+    deleteCommentsOfNewModel,
+    getAllCommentsModel
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#createCommentForNew">createCommentForNew</a></li><li><a href="global.html#createCommentsForNewModel">createCommentsForNewModel</a></li><li><a href="global.html#createNewById">createNewById</a></li><li><a href="global.html#createNewByIdModel">createNewByIdModel</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#createUserModel">createUserModel</a></li><li><a href="global.html#deleteCommentById">deleteCommentById</a></li><li><a href="global.html#deleteCommentByIdModel">deleteCommentByIdModel</a></li><li><a href="global.html#deleteCommentsOfNew">deleteCommentsOfNew</a></li><li><a href="global.html#deleteCommentsOfNewModel">deleteCommentsOfNewModel</a></li><li><a href="global.html#deleteNewAndComments">deleteNewAndComments</a></li><li><a href="global.html#deleteUser">deleteUser</a></li><li><a href="global.html#deleteUserModel">deleteUserModel</a></li><li><a href="global.html#generarJwt">generarJwt</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersModel">getAllUsersModel</a></li><li><a href="global.html#getCommentsByUser">getCommentsByUser</a></li><li><a href="global.html#getCommentsByUserModel">getCommentsByUserModel</a></li><li><a href="global.html#getLastNews">getLastNews</a></li><li><a href="global.html#getLastNewsByTeam">getLastNewsByTeam</a></li><li><a href="global.html#getLastNewsModel">getLastNewsModel</a></li><li><a href="global.html#getMyLastNews">getMyLastNews</a></li><li><a href="global.html#getMyLastNewsModel">getMyLastNewsModel</a></li><li><a href="global.html#getNewByIdAndComments">getNewByIdAndComments</a></li><li><a href="global.html#getNewByIdAndCommentsModel">getNewByIdAndCommentsModel</a></li><li><a href="global.html#getNewsByState">getNewsByState</a></li><li><a href="global.html#getNewsByStateAndUser">getNewsByStateAndUser</a></li><li><a href="global.html#getNewsByStateAndUserModel">getNewsByStateAndUserModel</a></li><li><a href="global.html#getNewsByStateModel">getNewsByStateModel</a></li><li><a href="global.html#getNewsByTeamModel">getNewsByTeamModel</a></li><li><a href="global.html#getUserByEmail">getUserByEmail</a></li><li><a href="global.html#getUserModel">getUserModel</a></li><li><a href="global.html#updateCommentById">updateCommentById</a></li><li><a href="global.html#updateCommentByIdModel">updateCommentByIdModel</a></li><li><a href="global.html#updateNew">updateNew</a></li><li><a href="global.html#updateNewModel">updateNewModel</a></li><li><a href="global.html#updateNewState">updateNewState</a></li><li><a href="global.html#updateNewStateModel">updateNewStateModel</a></li><li><a href="global.html#updatePass">updatePass</a></li><li><a href="global.html#updateUserModel">updateUserModel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon May 01 2023 00:31:13 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

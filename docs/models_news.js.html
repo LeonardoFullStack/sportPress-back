@@ -1,4 +1,32 @@
-const { Pool } = require('pg')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/news.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/news.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { Pool } = require('pg')
 const queries = require('./queries')
 
 
@@ -61,7 +89,7 @@ const getNewByIdAndCommentsModel =async (id) => {
  *
  * @async
  * @function
- * @returns {Promise<Array>} Modelo de las últimas 4 noticias
+ * @returns {Promise&lt;Array>} Modelo de las últimas 4 noticias
  * @throws {Error} Si ocurre un error al conectar con la base de datos
  *
  */
@@ -94,7 +122,7 @@ const getLastNewsModel= async () => {
  * @async
  * @function
  * @param {string} team Nombre del equipo para filtrar las noticias (opcional, si no se proporciona se devolverán todas las noticias)
- * @returns {Promise<{ withTeam: Object[], withoutTeam: Object[] }>} Objeto que contiene dos arrays de objetos, uno para noticias con equipo y otro para noticias sin equipo.
+ * @returns {Promise&lt;{ withTeam: Object[], withoutTeam: Object[] }>} Objeto que contiene dos arrays de objetos, uno para noticias con equipo y otro para noticias sin equipo.
  *
  */
 const getMyLastNewsModel=async (team) => {
@@ -134,7 +162,7 @@ const getMyLastNewsModel=async (team) => {
  * @async
  * @function getNewsByTeamModel
  * @param {string} team - Nombre del equipo del cual se desea obtener las noticias.
- * @returns {Promise<Array>} - Un array con las últimas noticias del equipo especificado.
+ * @returns {Promise&lt;Array>} - Un array con las últimas noticias del equipo especificado.
  * @throws {Error} - Si ocurre algún error durante la ejecución de la consulta.
  */
 const getNewsByTeamModel=async (team) => {
@@ -166,7 +194,7 @@ const getNewsByTeamModel=async (team) => {
  * @async
  * @function getNewsByStateModel
  * @param {string} state - El estado del cual se quieren obtener las noticias.
- * @returns {Promise<Array>} - Promesa que se resuelve con un array de objetos JSON que contienen las noticias del estado especificado.
+ * @returns {Promise&lt;Array>} - Promesa que se resuelve con un array de objetos JSON que contienen las noticias del estado especificado.
  * @throws {Object} - Objeto de error en caso de fallo en la obtención de noticias.
  */
 const getNewsByStateModel=async (state) => {
@@ -200,7 +228,7 @@ const getNewsByStateModel=async (state) => {
  * @function
  * @param {string} state - El estado del que se quieren obtener las noticias.
  * @param {string} user - El identificador del usuario que creó las noticias.
- * @returns {Promise<Array>} - Una promesa que resuelve en un array con las noticias.
+ * @returns {Promise&lt;Array>} - Una promesa que resuelve en un array con las noticias.
  * @throws {Error} - Si hay algún error al conectarse a la base de datos.
  */
 const getNewsByStateAndUserModel =async (state, user) => {
@@ -236,9 +264,9 @@ const getNewsByStateAndUserModel =async (state, user) => {
  * @param {string} extract - Un extracto de la noticia.
  * @param {string} text - El cuerpo de la noticia.
  * @param {string} image - La URL de la imagen asociada a la noticia.
- * @param {Array<string>} tags - Un array de strings que contiene las etiquetas asociadas a la noticia.
+ * @param {Array&lt;string>} tags - Un array de strings que contiene las etiquetas asociadas a la noticia.
  * @throws {Error} Si ocurre algún error al ejecutar la consulta SQL.
- * @returns {Promise<Array<object>>} Una promesa que retorna un array con los datos de la nueva noticia creada.
+ * @returns {Promise&lt;Array&lt;object>>} Una promesa que retorna un array con los datos de la nueva noticia creada.
  */
 const createNewByIdModel = async (id_user, title, extract, text, image, tags) => {
      let client,result;
@@ -264,7 +292,7 @@ const createNewByIdModel = async (id_user, title, extract, text, image, tags) =>
  * @async
  * @param {string} newState - El nuevo estado de la noticia.
  * @param {string} id_new - El ID de la noticia a actualizar.
- * @returns {Promise<Array>} - Una promesa que resuelve con un arreglo de objetos con la información de la noticia actualizada.
+ * @returns {Promise&lt;Array>} - Una promesa que resuelve con un arreglo de objetos con la información de la noticia actualizada.
  * @throws {Object} - Un objeto de error si ocurre una excepción.
  */
 const updateNewStateModel = async (newState, id_new) => {
@@ -295,7 +323,7 @@ const updateNewStateModel = async (newState, id_new) => {
  * @param {string} image - La URL de la imagen actualizada de la noticia.
  * @param {string} tags - Las etiquetas actualizadas de la noticia.
  * @param {number} id_new - El ID de la noticia que se actualizará.
- * @returns {Promise<Array<Object>>} El resultado de la consulta como un array de objetos.
+ * @returns {Promise&lt;Array&lt;Object>>} El resultado de la consulta como un array de objetos.
  * @throws {Error} Si hay algún error en la consulta a la base de datos.
  */
 const updateNewModel = async ( title, extract, text, image, tags, id_new) => {
@@ -348,4 +376,26 @@ module.exports = {
     updateNewStateModel,
     updateNewModel,
     deleteNewModel
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#createCommentForNew">createCommentForNew</a></li><li><a href="global.html#createCommentsForNewModel">createCommentsForNewModel</a></li><li><a href="global.html#createNewById">createNewById</a></li><li><a href="global.html#createNewByIdModel">createNewByIdModel</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#createUserModel">createUserModel</a></li><li><a href="global.html#deleteCommentById">deleteCommentById</a></li><li><a href="global.html#deleteCommentByIdModel">deleteCommentByIdModel</a></li><li><a href="global.html#deleteCommentsOfNew">deleteCommentsOfNew</a></li><li><a href="global.html#deleteCommentsOfNewModel">deleteCommentsOfNewModel</a></li><li><a href="global.html#deleteNewAndComments">deleteNewAndComments</a></li><li><a href="global.html#deleteUser">deleteUser</a></li><li><a href="global.html#deleteUserModel">deleteUserModel</a></li><li><a href="global.html#generarJwt">generarJwt</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersModel">getAllUsersModel</a></li><li><a href="global.html#getCommentsByUser">getCommentsByUser</a></li><li><a href="global.html#getCommentsByUserModel">getCommentsByUserModel</a></li><li><a href="global.html#getLastNews">getLastNews</a></li><li><a href="global.html#getLastNewsByTeam">getLastNewsByTeam</a></li><li><a href="global.html#getLastNewsModel">getLastNewsModel</a></li><li><a href="global.html#getMyLastNews">getMyLastNews</a></li><li><a href="global.html#getMyLastNewsModel">getMyLastNewsModel</a></li><li><a href="global.html#getNewByIdAndComments">getNewByIdAndComments</a></li><li><a href="global.html#getNewByIdAndCommentsModel">getNewByIdAndCommentsModel</a></li><li><a href="global.html#getNewsByState">getNewsByState</a></li><li><a href="global.html#getNewsByStateAndUser">getNewsByStateAndUser</a></li><li><a href="global.html#getNewsByStateAndUserModel">getNewsByStateAndUserModel</a></li><li><a href="global.html#getNewsByStateModel">getNewsByStateModel</a></li><li><a href="global.html#getNewsByTeamModel">getNewsByTeamModel</a></li><li><a href="global.html#getUserByEmail">getUserByEmail</a></li><li><a href="global.html#getUserModel">getUserModel</a></li><li><a href="global.html#updateCommentById">updateCommentById</a></li><li><a href="global.html#updateCommentByIdModel">updateCommentByIdModel</a></li><li><a href="global.html#updateNew">updateNew</a></li><li><a href="global.html#updateNewModel">updateNewModel</a></li><li><a href="global.html#updateNewState">updateNewState</a></li><li><a href="global.html#updateNewStateModel">updateNewStateModel</a></li><li><a href="global.html#updatePass">updatePass</a></li><li><a href="global.html#updateUserModel">updateUserModel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon May 01 2023 00:31:13 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
