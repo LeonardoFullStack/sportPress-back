@@ -46,3 +46,8 @@ Y para finalizar, deberemos iniciar el proyecto con el comando
 - DELETE http://localhost:3000/api/comments/deletecomment/:id : Elimina un comentario por su id, pasado por URL.
 - DELETE http://localhost:3000/api/comments/deletenewcomments/:id : Elimina todos los comentarios de una noticia en concreto, pasando el id de la noticia por URL.
 ***
+
+## DOCUMENTACIÓN DE FUNCIONES
+
+Podéis consultar la documentación de las funciones en la siguiente URL:
+>https://leonardofullstack.github.io/sportPress-back/ 
