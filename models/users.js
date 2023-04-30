@@ -142,7 +142,7 @@ const pool = new Pool({
          fullData = await client.query(queries.getUserByEmail, [email]) //para saber también el id
 
       } else {
-        console.log('paso')
+        
         client = await pool.connect()
         const data = await client.query(queries.updateUserPass, [ email,password, ])
          fullData = await client.query(queries.getUserByEmail, [email]) //para saber también el id
@@ -161,7 +161,7 @@ const pool = new Pool({
         client.release()
 
     }
-    console.log(fullData.rows)
+    
     return fullData.rows
 
   }
@@ -175,13 +175,13 @@ const pool = new Pool({
  * @returns {Promise} Una promesa que se resuelve con los resultados de la eliminación.
  * @throws {Error} Si se produce algún error al intentar eliminar al usuario.
  */
-  const deleteUserModel = async (email) => {
+  const deleteUserModel = async (id) => {
     let client,result;
 
     try {
 
         client = await pool.connect()
-        const data = await client.query(queries.deleteUser, [email])
+        const data = await client.query(queries.deleteUser, [id])
         result = data.rows
 
     } catch (error) {

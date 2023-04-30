@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/users.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/users.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { Pool } = require('pg')
+const queries = require('./queries')
+
+const pool = new Pool({
+    host: 'horton.db.elephantsql.com',
+    user: 'rrnjbnic',
+    database: 'rrnjbnic',
+    password: process.env.POSTGREPASS,
+    port: 5432, // Puerto por defecto para PostgreSQL
+    ssl: {
+      rejectUnauthorized: false // Habilitar SSL sin verificar el certificado
+    }
+  });
+
+
+  /**
+   * 
+   * @param {string} email el email obtenido por el usuario en el front
+   * @returns {Promise&lt;Array>} el resultado de la consulta
+   */
+  const getUserModel =async (email) => {
+    let client,result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getUserByEmail, [email])
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+  }
+
+/**
+ * Obtiene todos los usuarios de la base de datos.
+ *
+ * @async
+ * @function
+ * @returns {Promise&lt;Array&lt;Object>>} Una promesa que se resuelve en un array de objetos que representan los usuarios.
+ * @throws {Error} Si ocurre un error al conectarse a la base de datos o al ejecutar la consulta.
+ *
+ * @example
+ *
+ * // Retorna un array de objetos que representan los usuarios.*/
+  const getAllUsersModel =async () => {
+    let client,result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getAllUsers)
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+  }
+
+
+  /**
+ * Crea un nuevo usuario en la base de datos.
+ * @async
+ * @function
+ * @param {string} name - Nombre del usuario.
+ * @param {string} email - Correo electrónico del usuario.
+ * @param {string} password - Contraseña del usuario.
+ * @param {string} team - Equipo al que pertenece el usuario.
+ * @returns {Promise&lt;object>} Objeto con la información del usuario creado.
+ * @throws {Error} Si ocurre un error al crear el usuario.
+ */
+  const createUserModel = async (name, email, password, team) => {
+
+    let client,result,fullData;
+    const role = 'user'
+
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.createUser, [name, email, password, role, team])
+         fullData = await client.query(queries.getUserByEmail, [email]) //para saber también el id
+        
+
+    } catch (error) {
+
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return fullData.rows
+
+  }
+
+
+  /**
+ * Actualiza los datos del usuario en la base de datos.Si no se pasa password, actualiza el rol. Si se pasa password, actualiza
+ * ésta.
+ *
+ * @async
+ * @function updateUserModel
+ * @param {string} email - El email del usuario.
+ * @param {string} role - El rol del usuario.
+ * @param {string} [password] - La contraseña del usuario (opcional).
+ * @returns {Promise&lt;Array>} Promesa que resuelve un array de objetos con los datos actualizados del usuario.
+ * @throws {Error} Error al actualizar los datos del usuario.
+ *
+ */
+  const updateUserModel = async (email, role, password) => {
+
+    let client,result,fullData;
+
+    
+    try {
+
+      if (!password) {
+        
+        client = await pool.connect()
+        const data = await client.query(queries.updateUserRole, [ email,role, ])
+         fullData = await client.query(queries.getUserByEmail, [email]) //para saber también el id
+
+      } else {
+        
+        client = await pool.connect()
+        const data = await client.query(queries.updateUserPass, [ email,password, ])
+         fullData = await client.query(queries.getUserByEmail, [email]) //para saber también el id
+
+      }
+
+        
+        
+
+    } catch (error) {
+      console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+    
+    return fullData.rows
+
+  }
+
+
+  /**
+ * Elimina un usuario de la base de datos según su correo electrónico.
+ *
+ * @async
+ * @param {string} email - Correo electrónico del usuario que se desea eliminar.
+ * @returns {Promise} Una promesa que se resuelve con los resultados de la eliminación.
+ * @throws {Error} Si se produce algún error al intentar eliminar al usuario.
+ */
+  const deleteUserModel = async (id) => {
+    let client,result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.deleteUser, [id])
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+  }
+
+  module.exports = {
+    getUserModel,
+    getAllUsersModel,
+    createUserModel,
+    updateUserModel,
+    deleteUserModel
+  }</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#createCommentForNew">createCommentForNew</a></li><li><a href="global.html#createCommentsForNewModel">createCommentsForNewModel</a></li><li><a href="global.html#createNewById">createNewById</a></li><li><a href="global.html#createNewByIdModel">createNewByIdModel</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#createUserModel">createUserModel</a></li><li><a href="global.html#deleteCommentById">deleteCommentById</a></li><li><a href="global.html#deleteCommentByIdModel">deleteCommentByIdModel</a></li><li><a href="global.html#deleteCommentsOfNew">deleteCommentsOfNew</a></li><li><a href="global.html#deleteCommentsOfNewModel">deleteCommentsOfNewModel</a></li><li><a href="global.html#deleteNewAndComments">deleteNewAndComments</a></li><li><a href="global.html#deleteUser">deleteUser</a></li><li><a href="global.html#deleteUserModel">deleteUserModel</a></li><li><a href="global.html#generarJwt">generarJwt</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersModel">getAllUsersModel</a></li><li><a href="global.html#getCommentsByUser">getCommentsByUser</a></li><li><a href="global.html#getCommentsByUserModel">getCommentsByUserModel</a></li><li><a href="global.html#getLastNews">getLastNews</a></li><li><a href="global.html#getLastNewsByTeam">getLastNewsByTeam</a></li><li><a href="global.html#getLastNewsModel">getLastNewsModel</a></li><li><a href="global.html#getMyLastNews">getMyLastNews</a></li><li><a href="global.html#getMyLastNewsModel">getMyLastNewsModel</a></li><li><a href="global.html#getNewByIdAndComments">getNewByIdAndComments</a></li><li><a href="global.html#getNewByIdAndCommentsModel">getNewByIdAndCommentsModel</a></li><li><a href="global.html#getNewsByState">getNewsByState</a></li><li><a href="global.html#getNewsByStateAndUser">getNewsByStateAndUser</a></li><li><a href="global.html#getNewsByStateAndUserModel">getNewsByStateAndUserModel</a></li><li><a href="global.html#getNewsByStateModel">getNewsByStateModel</a></li><li><a href="global.html#getNewsByTeamModel">getNewsByTeamModel</a></li><li><a href="global.html#getUserByEmail">getUserByEmail</a></li><li><a href="global.html#getUserModel">getUserModel</a></li><li><a href="global.html#updateCommentById">updateCommentById</a></li><li><a href="global.html#updateCommentByIdModel">updateCommentByIdModel</a></li><li><a href="global.html#updateNew">updateNew</a></li><li><a href="global.html#updateNewModel">updateNewModel</a></li><li><a href="global.html#updateNewState">updateNewState</a></li><li><a href="global.html#updateNewStateModel">updateNewStateModel</a></li><li><a href="global.html#updatePass">updatePass</a></li><li><a href="global.html#updateUserModel">updateUserModel</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon May 01 2023 00:31:13 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
