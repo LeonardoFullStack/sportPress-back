@@ -3,7 +3,7 @@ const {check} = require('express-validator')
 
 const router=express.Router()
 
-const {getUserByEmail, getAllUsers, createUser, updateRole, updatePass, deleteUser} = require('../controllers/apiUsersControllers');
+const {getUserByEmail, getAllUsers, createUser, verifyToken, updateRole, updatePass, deleteUser} = require('../controllers/apiUsersControllers');
 const {validarInputs} = require('../middleware/inputValidate')
 
 router.get('/', getAllUsers)
@@ -16,6 +16,8 @@ router.post('/signup', [
     check('password', 'Tiene que tener mínimo 4 caracteres').not().isEmpty().isLength({ min: 4 }),
     validarInputs
 ], createUser)
+
+router.post('/verifytoken', verifyToken)
 
 router.put('/updaterole', updateRole)
 

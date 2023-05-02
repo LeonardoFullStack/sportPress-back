@@ -1,6 +1,7 @@
-const { getUserModel, getAllUsersModel, createUserModel, updateUserModel, deleteUserModel } = require('../models/users')
+const { getUserModel, getAllUsersModel, createUserModel, getUserByIdModel, updateUserModel, deleteUserModel } = require('../models/users')
 const { generarJwt } = require('../helpers/jwt')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 
 /**
@@ -20,7 +21,7 @@ const getUserByEmail = async (req, res) => {
 
         if (petition.length != 0) {
 
-            const token = await generarJwt(petition[0].id_user, petition[0].name)
+            const token = await generarJwt(petition[0].id_user, petition[0].role)
 
             res.status(200).json({
                 ok: true,
@@ -83,6 +84,28 @@ const getAllUsers = async (req, res) => {
 }
 
 
+const verifyToken = async (req,res) => {
+    const {token} = req.body
+
+    try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET_KEY)
+        const user = await getUserByIdModel(payload.uid)
+    
+    res.status(200).json({
+        ok:true,
+        msg:'Usuario encontrado',
+        user:user[0]
+    })
+    } catch (error) {
+        res.status(401).json({
+            ok:false,
+            msg:'Fallo al validar el token',
+            error
+        })
+    }
+   
+}
+
 /**
  * Crea un nuevo usuario en la base de datos.
  *
@@ -109,7 +132,7 @@ const createUser = async (req, res) => {
             password = bcrypt.hashSync(password, salt)
 
             const petition = await createUserModel(name, email, password, team)
-            const token = await generarJwt(petition[0].id_user, petition[0].name)
+            const token = await generarJwt(petition[0].id_user, petition[0].role)
             res.status(200).json({
                 ok: true,
                 msg: 'Se ha creado el usuario',
@@ -272,5 +295,6 @@ module.exports = {
     createUser,
     updateRole,
     updatePass,
-    deleteUser
+    deleteUser,
+    verifyToken
 }

@@ -1,11 +1,14 @@
 const express=require('express')
 
 const app=express()
+const cors = require('cors');
 
 //usar dotenv
 require('dotenv').config();
 const port=process.env.PORT || 3000;
 
+//usar cors
+app.use(cors());
 
 // Body-parser middleware
 app.use(express.urlencoded({extended:true}))

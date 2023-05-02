@@ -6,6 +6,10 @@ const queries = {
     `SELECT *
     FROM USERS
     WHERE email=$1`,
+    getUserById:
+    `SELECT *
+    FROM USERS
+    WHERE id_user=$1`,
     getAllUsers : 
     `SELECT *
     FROM USERS`,

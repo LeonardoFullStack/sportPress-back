@@ -41,6 +41,29 @@ const pool = new Pool({
     return result
   }
 
+  const getUserByIdModel =async (id) => {
+    let client,result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getUserById, [id])
+        result = data.rows
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+  }
+
 /**
  * Obtiene todos los usuarios de la base de datos.
  *
@@ -200,6 +223,7 @@ const pool = new Pool({
 
   module.exports = {
     getUserModel,
+    getUserByIdModel,
     getAllUsersModel,
     createUserModel,
     updateUserModel,
