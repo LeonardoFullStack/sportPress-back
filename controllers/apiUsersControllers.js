@@ -1,4 +1,7 @@
-const { getUserModel, getAllUsersModel, createUserModel, getUserByIdModel, updateUserModel, deleteUserModel } = require('../models/users')
+const {
+     getUserModel, getAllUsersModel, createUserModel, getUserByIdModel, updateUserModel, deleteUserModel,
+     updateUserTeamModel
+     } = require('../models/users')
 const { generarJwt } = require('../helpers/jwt')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -59,6 +62,8 @@ const getUserByEmail = async (req, res) => {
 
  */
 const getAllUsers = async (req, res) => {
+
+    
     try {
 
         const petition = await getAllUsersModel()
@@ -76,6 +81,26 @@ const getAllUsers = async (req, res) => {
 
     } catch (error) {
         res.status(409).json({
+            ok: false,
+            msg: 'contacta con el administrador',
+            error
+        })
+    }
+}
+
+const selectTeam = async (req,res) => {
+    const {email, team} = req.body
+
+    try {
+        const petition = await updateUserTeamModel(email, team)
+
+        res.status(200).json({
+            ok: true,
+            msg: 'Se ha actualizado el usuario',
+            data: petition
+        })
+    } catch (error) {
+        res.status(400).json({
             ok: false,
             msg: 'contacta con el administrador',
             error
@@ -296,5 +321,6 @@ module.exports = {
     updateRole,
     updatePass,
     deleteUser,
-    verifyToken
+    verifyToken,
+    selectTeam
 }

@@ -35,5 +35,6 @@ CREATE TABLE news (
     image varchar(255) NOT NULL,
     tags varchar(100) NOT NULL,
     date TIMESTAMP DEFAULT to_timestamp(to_char(CURRENT_TIMESTAMP, 'DD/MM/YYYY HH24:MI:SS'), 'DD/MM/YYYY HH24:MI:SS'),
-    state varchar(50)
+    state varchar(50),
+    altimage varchar(100)
 )

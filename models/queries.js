@@ -25,6 +25,10 @@ const queries = {
     `UPDATE users
     SET role =$2
     WHERE email =$1`,
+    updateUserTeam:
+    `UPDATE users
+    SET team =$2
+    WHERE email =$1`,
     deleteUser: 
     `DELETE FROM users
     WHERE id_user=$1`,
@@ -42,6 +46,11 @@ const queries = {
     WHERE state='aproved'
     ORDER BY n.date DESC
     LIMIT 4`,
+    getRestOfNews:
+    `SELECT *
+    FROM news
+    ORDER  BY date DESC
+    OFFSET 4`,
     getLastNewsWithoutTeam:
     `SELECT *
     FROM news AS n
@@ -69,16 +78,16 @@ const queries = {
     FROM news
     WHERE state=$1 AND id_user=$2`,
     createNewByIdUser:
-    `INSERT INTO news (id_user, title, extract, text, image, tags)
+    `INSERT INTO news (id_user, title, extract, text, image, tags, altimage)
     VALUES
-    ($1, $2, $3, $4, $5, $6)`,
+    ($1, $2, $3, $4, $5, $6, $7)`,
     updateNewState:
     `UPDATE news
     SET state=$1
     WHERE id_new=$2`,
     updateNew:
     `UPDATE news
-    SET title = $1, extract = $2, text = $3, image = $4, tags = $5, date = DEFAULT
+    SET title = $1, extract = $2, text = $3, image = $4, tags = $5, date = DEFAULT, altimage = $7
     WHERE id_new = $6`,
     deleteNew:
     `DELETE FROM news
@@ -91,9 +100,9 @@ const queries = {
     `SELECT *
     FROM comments`,
     createCommentForNew:
-    `INSERT INTO comments (text, id_user, id_new)
+    `INSERT INTO comments (text, id_user, id_new, name)
     VALUES
-    ($1, $2, $3)
+    ($1, $2, $3, $4)
      `,
      updateNewById:
      `UPDATE comments

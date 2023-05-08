@@ -77,13 +77,13 @@ const getAllCommentsModel = async (id_user) => {
  * @returns {Promise<Object>} - Objeto con los detalles del comentario creado
  * @throws {Error} - Si se produce algún error al interactuar con la base de datos
  */
-const createCommentsForNewModel = async (text, id_user, id_new) => {
+const createCommentsForNewModel = async (text, id_user, id_new, name) => {
     let client, result;
 
     try {
 
         client = await pool.connect()
-        const data = await client.query(queries.createCommentForNew, [text, id_user, id_new])
+        const data = await client.query(queries.createCommentForNew, [text, id_user, id_new, name])
         result = data.rows
 
     } catch (error) {

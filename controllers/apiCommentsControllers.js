@@ -2,6 +2,7 @@ const {
     getCommentsByUserModel, createCommentsForNewModel, updateCommentByIdModel, deleteCommentByIdModel,
     deleteCommentsOfNewModel, getAllCommentsModel
 } = require('../models/comments')
+const { getNewByIdAndCommentsModel } = require('../models/news')
 
 
 /**
@@ -47,7 +48,7 @@ const getCommentsByUser = async (req, res) => {
  * @throws {Object} - El objeto de error en caso de que algo falle en la operación.
  */
 const createCommentForNew = async (req, res) => {
-    const { text, id_user, id_new } = req.body
+    const { text, id_user, id_new, name } = req.body
 
     if (!id_user || !id_new) {
         res.status(404).json({
@@ -58,10 +59,13 @@ const createCommentForNew = async (req, res) => {
     } else {
 
         try {
-            const petition = createCommentsForNewModel(text, id_user, id_new)
+            const petition = await createCommentsForNewModel(text, id_user, id_new, name)
+            const newData = await getNewByIdAndCommentsModel(id_new)
+            console.log(newData)
             res.status(200).json({
                 ok: true,
-                msg: 'El comentario ha sido publicado'
+                msg: 'El comentario ha sido publicado',
+                data:newData
             })
         } catch (error) {
             res.status(500).json({

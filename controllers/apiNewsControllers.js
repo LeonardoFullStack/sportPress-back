@@ -2,7 +2,8 @@
 
 const {
     getNewByIdAndCommentsModel, getLastNewsModel, getMyLastNewsModel, getNewsByTeamModel, getNewsByStateModel,
-    getNewsByStateAndUserModel, createNewByIdModel, updateNewStateModel, updateNewModel, deleteNewModel
+    getNewsByStateAndUserModel, createNewByIdModel, updateNewStateModel, updateNewModel, deleteNewModel,
+    getRestOfNewsModel
 } = require('../models/news')
 
 const {deleteCommentsOfNewModel} = require('../models/comments')
@@ -238,13 +239,16 @@ const getNewsByStateAndUser = async (req, res) => {
  * @param {string} req.body.tags - Etiquetas relacionadas con la noticia.
  */
 const createNewById = async (req, res) => {
-    const { id_user, title, extract, text, image, tags } = req.body
+    const { id_user, title, extract, text, image, tags, altimage } = req.body
 
     try {
-        const petition = await createNewByIdModel(id_user, title, extract, text, image, tags)
+        const petition = await createNewByIdModel(id_user, title, extract, text, image, tags, altimage)
         res.status(200).json({
             ok: true,
-            msg: 'Se ha creado la noticia.'
+            msg: 'Se ha creado la noticia.',
+            data: {
+                ...req.body
+            }
         })
     } catch (error) {
         res.status(500).json({
@@ -303,11 +307,11 @@ const updateNewState = async (req, res) => {
  * @throws {Error} Si la operación de actualización falla por alguna razón.
  */
 const updateNew = async (req, res) => {
-    const { title, extract, text, image, tags, id_new } = req.body
+    const { title, extract, text, image, tags, id_new, altimage } = req.body
 
     try {
 
-        const petition = await updateNewModel(title, extract, text, image, tags, id_new)
+        const petition = await updateNewModel(title, extract, text, image, tags, id_new, altimage)
 
         res.status(200).json({
             ok: true,
@@ -358,6 +362,24 @@ const deleteNewAndComments = async (req, res) => {
     }
 }
 
+const getRestOfNews = async (req,res) => {
+    try {
+        const petition = await getRestOfNewsModel()
+
+        res.status(200).json({
+            ok: true,
+            msg: 'Resto de las noticias',
+            data: petition
+        })
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'contacta con el administrador',
+            error
+        })
+    }
+}
+
 
 module.exports = {
     getNewByIdAndComments,
@@ -369,5 +391,6 @@ module.exports = {
     createNewById,
     updateNewState,
     updateNew,
-    deleteNewAndComments
+    deleteNewAndComments,
+    getRestOfNews
 }

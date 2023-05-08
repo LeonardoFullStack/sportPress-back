@@ -3,7 +3,7 @@ const {check} = require('express-validator')
 
 const router=express.Router()
 
-const {getUserByEmail, getAllUsers, createUser, verifyToken, updateRole, updatePass, deleteUser} = require('../controllers/apiUsersControllers');
+const {getUserByEmail, getAllUsers, createUser, verifyToken, updateRole, updatePass, deleteUser, selectTeam} = require('../controllers/apiUsersControllers');
 const {validarInputs} = require('../middleware/inputValidate')
 
 router.get('/', getAllUsers)
@@ -22,6 +22,8 @@ router.post('/verifytoken', verifyToken)
 router.put('/updaterole', updateRole)
 
 router.put('/updatepass', updatePass)
+
+router.put('/selectteam', selectTeam)
 
 router.delete('/deleteuser/:id', deleteUser)
 

@@ -128,6 +128,29 @@ const getMyLastNewsModel=async (team) => {
     return result
 }
 
+const getRestOfNewsModel = async () => {
+    let client,result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getRestOfNews)
+        result = data.rows
+        
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
 
 /**
  * Obtiene las últimas noticias de un equipo específico.
@@ -240,12 +263,12 @@ const getNewsByStateAndUserModel =async (state, user) => {
  * @throws {Error} Si ocurre algún error al ejecutar la consulta SQL.
  * @returns {Promise<Array<object>>} Una promesa que retorna un array con los datos de la nueva noticia creada.
  */
-const createNewByIdModel = async (id_user, title, extract, text, image, tags) => {
+const createNewByIdModel = async (id_user, title, extract, text, image, tags, altimage) => {
      let client,result;
 
     try {
         client= await pool.connect()
-        const data = await client.query(queries.createNewByIdUser, [id_user, title, extract, text, image, tags])
+        const data = await client.query(queries.createNewByIdUser, [id_user, title, extract, text, image, tags, altimage])
         result = data.rows
     } catch (error) {
         console.log(error)
@@ -298,12 +321,12 @@ const updateNewStateModel = async (newState, id_new) => {
  * @returns {Promise<Array<Object>>} El resultado de la consulta como un array de objetos.
  * @throws {Error} Si hay algún error en la consulta a la base de datos.
  */
-const updateNewModel = async ( title, extract, text, image, tags, id_new) => {
+const updateNewModel = async ( title, extract, text, image, tags, id_new, altimage) => {
     let client,result;
 
     try {
         client= await pool.connect()
-        const data = await client.query(queries.updateNew, [title, extract, text, image, tags, id_new])
+        const data = await client.query(queries.updateNew, [title, extract, text, image, tags, id_new, altimage])
         result = data.rows
     } catch (error) {
         console.log(error)
@@ -340,6 +363,7 @@ const deleteNewModel = async (id) => {
 module.exports = {
     getNewByIdAndCommentsModel,
     getLastNewsModel,
+    getRestOfNewsModel,
     getMyLastNewsModel,
     getNewsByTeamModel,
     getNewsByStateModel,

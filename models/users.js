@@ -189,7 +189,30 @@ const pool = new Pool({
 
   }
 
+  const updateUserTeamModel = async (email, team) => {
 
+    let client,result,fullData;
+
+    
+    try {
+        
+        client = await pool.connect()
+        const data = await client.query(queries.updateUserTeam, [ email,team ])
+         fullData = await client.query(queries.getUserByEmail, [email]) //para saber también el id
+
+   } catch (error) {
+      console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+    
+    return fullData.rows
+
+  }
   /**
  * Elimina un usuario de la base de datos según su correo electrónico.
  *
@@ -227,5 +250,6 @@ const pool = new Pool({
     getAllUsersModel,
     createUserModel,
     updateUserModel,
-    deleteUserModel
+    deleteUserModel,
+    updateUserTeamModel
   }
