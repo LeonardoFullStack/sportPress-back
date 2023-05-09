@@ -49,6 +49,7 @@ const queries = {
     getRestOfNews:
     `SELECT *
     FROM news
+    WHERE state='aproved'
     ORDER  BY date DESC
     OFFSET 4`,
     getLastNewsWithoutTeam:

@@ -17,6 +17,7 @@ Y para finalizar, deberemos iniciar el proyecto con el comando
 
 ***
 ## Endpoints
+>https://documenter.getpostman.com/view/26092514/2s93eYWYD8
 
 ### users
 - GET http://localhost:3000/api/users : Recoge a todos los usuarios 

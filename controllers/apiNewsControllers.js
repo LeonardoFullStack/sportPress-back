@@ -363,6 +363,7 @@ const deleteNewAndComments = async (req, res) => {
 }
 
 const getRestOfNews = async (req,res) => {
+    console.log('paso')
     try {
         const petition = await getRestOfNewsModel()
 
